@@ -59,4 +59,14 @@ class Post extends Model
         $this->attributes['title'] = $title;
         $this->attributes['slug'] = str_slug($title);
     }
+
+    public function isAuthoredBy(User $user)
+    {
+        return $this->user_id == $user->id;
+    }
+
+    public function isNotAuthoredBy(User $user)
+    {
+        return ! $this->isAuthoredBy($user);
+    }
 }
