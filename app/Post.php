@@ -2,10 +2,13 @@
 
 namespace App;
 
+use Backpack\CRUD\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Post extends Model
 {
+    use CrudTrait;
     // public static function boot()
     // {
     //     parent::boot();
@@ -15,8 +18,8 @@ class Post extends Model
     //     });
     // }
 
-    // protected $guarded = ['id'];
-    protected $fillable = ['title','preview','body','category_id', 'user_id'];
+    protected $guarded = ['id'];
+    // protected $fillable = ['title','preview','body','category_id', 'user_id', 'cover'];
 
     public function getRouteKeyName()
     {
@@ -48,12 +51,32 @@ class Post extends Model
     }
 
     // getters - accessros
-    // public function getTitleAttribute($title)
+    public function getCoverAttribute($cover)
+    {
+        return '/storage/' . ($cover ?? 'covers/default.jpg');
+    }
+
+    // public function getAttachmentAttribute($attachment)
     // {
-    //     return strtoupper($title);
+    //     return $attachment;
+    //     // return config('filesystems.disks.vault.root') . '/' . $attachment;
     // }
 
     // setters - mutators
+    public function setCoverAttribute($cover)
+    {
+        // $this->attributes['cover'] =
+        // auth()->user()->can('upload', $this) ? $cover->store('covers') ? null;
+
+        $this->attributes['cover'] = $cover->store('covers');
+    }
+
+    public function setAttachmentAttribute($attachment)
+    {
+        $this->attributes['attachment'] = Storage::disk('vault')->putFile('attachments', $attachment);
+    }
+
+
     public function setTitleAttribute($title)
     {
         $this->attributes['title'] = $title;

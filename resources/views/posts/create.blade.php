@@ -4,7 +4,7 @@
 
 <h2>Create new post</h2>
 
-<form method="POST" action="{{ route('posts.store') }}">
+<form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data">
 
     @csrf
 

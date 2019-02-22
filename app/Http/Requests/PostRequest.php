@@ -31,6 +31,8 @@ class PostRequest extends FormRequest
             'preview' => 'required|max:200',
             'body' => 'required',
             'category_id' => 'required|exists:categories,id',
+            'cover' => 'sometimes',
+            'attachment' => 'sometimes',
         ];
     }
 }

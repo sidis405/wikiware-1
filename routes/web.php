@@ -2,6 +2,27 @@
 
 Route::get('/', 'PostsController@index')->name('posts.index');
 Route::resource('posts', 'PostsController')->except('index');
+
+
+Route::get('categories', 'CategoriesController@index')->name('categories.index');
+Route::get('categories/{category}', 'CategoriesController@show')->name('categories.show');
+Route::get('tags/{tag}', 'TagsController')->name('tags.show');
+
+
+Route::get('posts/{post}/attachment', 'PostsAttachmentController')->name('posts.attachment');
+
+
+// middleware - admin
+// prefix - admin
+
+Route::middleware('admin')->prefix('admin')->group(function () {
+    CRUD::resource('categories', 'Admin\CategoryCrudController');
+    CRUD::resource('tags', 'Admin\TagCrudController');
+    CRUD::resource('posts', 'Admin\PostCrudController');
+});
+
+
+
 // Route::resource('videos', 'VideosController')->except('index');
 
 // Route::get('posts/create', 'PostsController@create')->name('posts.create');

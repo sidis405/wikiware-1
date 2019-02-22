@@ -33,4 +33,9 @@ class PostPolicy
     {
         return $user->role == 'admin';
     }
+
+    public function attach(User $user, Post $post)
+    {
+        return ($user->id == $post->user_id || $user->role == 'admin') && $post->attachment;
+    }
 }

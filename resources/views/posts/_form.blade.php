@@ -7,6 +7,19 @@
     <textarea name="preview" id="" cols="30" rows="3" class="form-control">{{ old('preview', $post->preview) }}</textarea>
 </div>
 
+<div class="row">
+    <div class="form-group col-md-6">
+        <label>Article Cover</label>
+        <input class="form-control" type="file" name="cover" />
+    </div>
+
+    <div class="form-group col-md-6">
+        <label>Article Attachment</label>
+        <input class="form-control" type="file" name="attachment" />
+    </div>
+</div>
+
+
 <div class="form-group">
     <label>Body</label>
     <textarea name="body" id="" cols="30" rows="7" class="form-control">{{ old('body', $post->body) }}</textarea>

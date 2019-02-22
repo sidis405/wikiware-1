@@ -2,6 +2,9 @@
 
 @section('content')
 
+
+    {{-- <example></example> --}}
+
     <h2>Latests posts ({{ $posts->total() }})</h2>
 
     @foreach($posts as $post)

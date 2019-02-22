@@ -5,29 +5,31 @@ namespace App\Http\Controllers;
 use App\Tag;
 use App\Post;
 use App\Category;
-use App\Events\PostWasUpdated;
 use App\Http\Requests\PostRequest;
+use App\Repositories\PostsRepository;
 
 class PostsController extends Controller
 {
-    public function __construct()
+    protected $postsRepo;
+
+    public function __construct(PostsRepository $postsRepo)
     {
+        $this->postsRepo = $postsRepo;
         $this->middleware('auth')->except('index', 'show');
         $this->middleware('can:update,post')->only('edit', 'update');
         $this->middleware('can:delete,post')->only('delete');
-        // $this->middleware('auth')->only('create', 'store', 'edit', 'update', 'destroy');
     }
 
     public function index()
     {
-        $posts = Post::with('user', 'category', 'tags')->latest()->paginate(10);
+        $posts = $this->postsRepo->getAll();
 
         return view('posts.index', compact('posts'));
     }
 
     public function show(Post $post)
     {
-        $post->load('user', 'category', 'tags');
+        $post = $this->postsRepo->show($post);
 
         return view('posts.show', compact('post'));
     }
@@ -44,9 +46,7 @@ class PostsController extends Controller
 
     public function store(PostRequest $request)
     {
-        $post = auth()->user()->posts()->create($request->validated());
-
-        $post->tags()->sync($request->tags);
+        $post = $this->postsRepo->store($request);
 
         return redirect()->route('posts.show', $post)->withStatus('Done.');
     }
@@ -61,19 +61,15 @@ class PostsController extends Controller
 
     public function update(Post $post, PostRequest $request)
     {
-        $post->update($request->validated());
+        $post = $this->postsRepo->update($post, $request);
 
-        $post->tags()->sync($request->tags);
-
-        event(new PostWasUpdated($post));
-
-        return redirect()->route('posts.show', $post)->withStatus('Done.');
+        return redirect()->route('posts.edit', $post)->withStatus('Done.');
     }
 
     public function destroy(Post $post)
     {
-        $post->tags()->sync([]);
-        $post->delete();
+        $this->postsRepo->delete($post);
+
         return redirect()->route('posts.index');
     }
 }

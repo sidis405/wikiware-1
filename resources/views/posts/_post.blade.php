@@ -1,4 +1,5 @@
 <div class="card">
+    <img src="{{ $post->cover }}" />
     <div class="card-header">
         <a href="{{ route('posts.show', $post) }}"><h4>{{ $post->title }}</h4></a>
         <span>by <strong>{{ $post->user->name }}</strong></span>
@@ -19,4 +20,10 @@
         <span>on <strong>{{ $post->category->name }}</strong></span>
         <span>tags: {{ $post->tags->pluck('name')->implode(', ') }}</span>
     </div>
+
+    @can('attach', $post)
+        <div class="card-footer">
+            <a href="{{ route('posts.attachment', $post) }}">Attachment</a>
+        </div>
+    @endcan
 </div>
